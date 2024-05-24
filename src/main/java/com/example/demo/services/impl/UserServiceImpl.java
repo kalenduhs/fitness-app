@@ -7,6 +7,10 @@ import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -18,7 +22,8 @@ public class UserServiceImpl implements UserService {
         User user = new User(
                 userDto.getId(),
                 userDto.getEmail(),
-                userDto.getPassword()
+                userDto.getPassword(),
+                userDto.getRole()
         );
 
         return user;
@@ -29,7 +34,8 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = new UserDto(
                 user.getId(),
                 user.getEmail(),
-                user.getPassword()
+                user.getPassword(),
+                user.getRole()
         );
 
         return userDto;
@@ -40,6 +46,17 @@ public class UserServiceImpl implements UserService {
         User user = toEntity(userDto);
         User savedUser = userRepository.save(user);
         return toDto(savedUser);
+    }
+
+    @Override
+    public List<UserDto> getAllUsers(String email) {
+        List<User> users = new ArrayList<>();
+        if (email != null && !email.isEmpty()) {
+            userRepository.findByEmail(email).forEach(users::add);
+        } else {
+            userRepository.findAll().forEach(users::add);
+        }
+        return users.stream().map(this::toDto).collect(Collectors.toList());
     }
 
 }

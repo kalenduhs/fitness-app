@@ -13,16 +13,18 @@ public class User {
     private Long id;
     private String email;
     private String password;
+    private String role;
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public User() {
     }
 
-    public User(Long id, String email, String password) {
+    public User(Long id, String email, String password, String role) {
         this.id = id;
         this.email = email;
         this.password = encoder.encode(password);
+        this.role = role;
     }
 
     public Long getId() {
@@ -43,5 +45,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
